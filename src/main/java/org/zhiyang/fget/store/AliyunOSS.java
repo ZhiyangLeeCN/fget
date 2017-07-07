@@ -38,6 +38,11 @@ public class AliyunOSS implements FileStore {
     }
 
     @Override
+    public boolean exist(String path) {
+        return this.storeClient.doesObjectExist(this.bucketName, path);
+    }
+
+    @Override
     public void put(String path, InputStream in) throws Exception {
         this.storeClient.putObject(this.bucketName, path, in);
     }
@@ -49,6 +54,6 @@ public class AliyunOSS implements FileStore {
 
     @Override
     public void shutdown() {
-
+        this.storeClient.shutdown();
     }
 }

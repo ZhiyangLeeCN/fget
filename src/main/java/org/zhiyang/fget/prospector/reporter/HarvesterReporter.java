@@ -11,6 +11,6 @@ public interface HarvesterReporter {
 
     public void reportProgress(String id, long totalSize, long readSize, boolean complete);
 
-    public void reportSuccessResult(String id, String path);
+    public void reportSuccessResult(String id, String realFileName, String path);
 
 }

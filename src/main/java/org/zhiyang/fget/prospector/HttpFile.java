@@ -25,11 +25,13 @@ public class HttpFile extends Harvester {
 
     private static OkHttpClient httpClient = new OkHttpClient();
 
+    private String id;
+
     private String url;
 
     private String savePath;
 
-    private String fileName;
+    private String realFileName;
 
     private long targetSize = 0;
 
@@ -46,6 +48,7 @@ public class HttpFile extends Harvester {
 
     public HttpFile(@NotNull String url, @NotNull String savePath,
                     @NotNull FileStore fileStore) {
+        this.id = Harvester.getHttpFileUniqueStoreName(url);
         this.url = url;
         this.savePath = savePath;
         this.fileStore = fileStore;
@@ -100,6 +103,11 @@ public class HttpFile extends Harvester {
     }
 
     @Override
+    public String id() {
+        return this.id;
+    }
+
+    @Override
     public void run() {
 
         Request request = new Request.Builder().url(this.url).build();
@@ -113,8 +121,7 @@ public class HttpFile extends Harvester {
             }
 
             //初始化用于存储的文件名
-            String fileRealName = extractFileName(response.header("Content-Disposition"), this.url);
-            this.fileName = Harvester.getHttpFileUniqueStoreName(fileRealName);
+            this.realFileName = extractFileName(response.header("Content-Disposition"), this.url);
 
             //存储下载文件并标记本次下载任务已经完成
             this.targetSize = responseBody.contentLength();
@@ -140,6 +147,10 @@ public class HttpFile extends Harvester {
         }
     }
 
+    public String getRealFileName() {
+        return realFileName;
+    }
+
     @Override
     public boolean isComplete() {
         return this.complete;
@@ -157,7 +168,7 @@ public class HttpFile extends Harvester {
 
     @Override
     public String getSaveFilePath() {
-        return this.savePath + "/" + this.fileName;
+        return this.savePath + "/" + this.id;
     }
 
     @Override

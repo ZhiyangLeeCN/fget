@@ -10,6 +10,8 @@ public interface FileStore {
 
     public boolean initialize();
 
+    public boolean exist(String path);
+
     public void put(String path, InputStream in) throws Exception;
 
     public void put(String path, File file) throws Exception;

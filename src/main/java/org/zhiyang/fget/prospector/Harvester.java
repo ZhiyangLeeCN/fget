@@ -12,6 +12,9 @@ public abstract class Harvester implements Runnable {
 
     private long readSize = 0;
 
+    //唯一标识
+    public abstract String id();
+
     //启动文件下载
     public abstract void run();
 

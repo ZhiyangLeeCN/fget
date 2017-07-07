@@ -36,6 +36,12 @@ public class LocalFileStore implements FileStore {
         }
     }
 
+    @Override
+    public boolean exist(String path) {
+        File file = new File(this.savePath.getPath() + "/" + path);
+        return file.exists();
+    }
+
     @Nullable
     private File ensureSaveFileOK(String filePath) throws IOException {
 
