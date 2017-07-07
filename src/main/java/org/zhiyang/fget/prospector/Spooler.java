@@ -8,6 +8,7 @@ import org.zhiyang.fget.FGetConfig;
 import org.zhiyang.fget.common.ThreadFactoryImpl;
 import org.zhiyang.fget.prospector.reporter.HarvesterReporter;
 import org.zhiyang.fget.prospector.reporter.HarvesterReporterFactory;
+import org.zhiyang.fget.prospector.reporter.ReporterInfo;
 import org.zhiyang.fget.store.FileStore;
 
 import java.util.HashMap;
@@ -88,31 +89,18 @@ public class Spooler {
                     //如果任务完则保存结果并在任务列表中移除
                     if (harvester.isComplete()) {
 
-                        if (harvester.isSuccess()) {
-
-                            if (harvester instanceof HttpFile) {
-
-                                HttpFile httpFile = (HttpFile) harvester;
-                                Spooler.this.reporter.reportSuccessResult(
-                                        httpFile.id(),
-                                        httpFile.getRealFileName(),
-                                        httpFile.getSaveFilePath()
-                                );
-
-                            }
-
-                        }
-
                         Spooler.this.harvesterTable.remove(entry.getKey());
                     }
 
                     //汇报当前任务的完成状态
-                    Spooler.this.reporter.reportProgress(
-                            harvester.id(),
-                            harvester.getTargetSize(),
-                            harvester.getReadSize(),
-                            harvester.isComplete()
-                    );
+                    Spooler.this.reporter.report(new ReporterInfo(
+                            harvester.id(),//任务唯一标识
+                            harvester.getRealFileName(),//下载的真实文件名
+                            harvester.getTargetSize(),//目标文件总大小
+                            harvester.getReadSize(),//目前已经下载大小
+                            harvester.isComplete(),//是否已经完成
+                            harvester.isSuccess()//是否下载成功
+                    ));
 
                 }
 
@@ -146,7 +134,7 @@ public class Spooler {
                 if (harvester == null) {
                     harvester = new HttpFile(url, savePath, this.fileStore);
                     //先初始化进度汇报
-                    this.reporter.reportProgress(id, 0, 0, false);
+                    //this.reporter.reportProgress(id, 0, 0, false);
                     this.harvesterExecutor.execute(harvester);
                 }
 

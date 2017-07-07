@@ -15,6 +15,9 @@ public abstract class Harvester implements Runnable {
     //唯一标识
     public abstract String id();
 
+    //真实文件名
+    public abstract String getRealFileName();
+
     //启动文件下载
     public abstract void run();
 
