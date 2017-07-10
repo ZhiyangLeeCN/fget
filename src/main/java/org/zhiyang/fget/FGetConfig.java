@@ -18,7 +18,13 @@ public class FGetConfig {
     private String ossBucketName;
 
     //SSDB的地址
-    private String ssdbHost = "127.0.0.1:8888";
+    private String ssdbHost = "127.0.0.1";
+
+    //SSDB的端口
+    private int ssdbPort = 8888;
+
+    //SSDB超时时间
+    private int ssdbTimeout = 3000;
 
     //存储路径
     private String storePath = "files";
@@ -36,7 +42,7 @@ public class FGetConfig {
     private boolean spoolerExecutorQueueHaveBound = true;
 
     //下载执行线程池的有界队列大小
-    private int spoolerExecutorQueueSzie = 100;
+    private int spoolerExecutorQueueSize = 100;
 
     public String getOssEndpoint() {
         return ossEndpoint;
@@ -76,6 +82,22 @@ public class FGetConfig {
 
     public void setSsdbHost(String ssdbHost) {
         this.ssdbHost = ssdbHost;
+    }
+
+    public int getSsdbPort() {
+        return ssdbPort;
+    }
+
+    public void setSsdbPort(int ssdbPort) {
+        this.ssdbPort = ssdbPort;
+    }
+
+    public int getSsdbTimeout() {
+        return ssdbTimeout;
+    }
+
+    public void setSsdbTimeout(int ssdbTimeout) {
+        this.ssdbTimeout = ssdbTimeout;
     }
 
     public String getStorePath() {
@@ -118,11 +140,11 @@ public class FGetConfig {
         this.spoolerExecutorQueueHaveBound = spoolerExecutorQueueHaveBound;
     }
 
-    public int getSpoolerExecutorQueueSzie() {
-        return spoolerExecutorQueueSzie;
+    public int getSpoolerExecutorQueueSize() {
+        return spoolerExecutorQueueSize;
     }
 
-    public void setSpoolerExecutorQueueSzie(int spoolerExecutorQueueSzie) {
-        this.spoolerExecutorQueueSzie = spoolerExecutorQueueSzie;
+    public void setSpoolerExecutorQueueSize(int spoolerExecutorQueueSize) {
+        this.spoolerExecutorQueueSize = spoolerExecutorQueueSize;
     }
 }

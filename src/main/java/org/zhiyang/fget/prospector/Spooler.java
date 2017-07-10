@@ -52,7 +52,7 @@ public class Spooler {
 
         if (this.fGetConfig.isSpoolerExecutorQueueHaveBound()) {
             this.harvesterExecutorQueue = new ArrayBlockingQueue<Runnable>(
-                    this.fGetConfig.getSpoolerExecutorQueueSzie()
+                    this.fGetConfig.getSpoolerExecutorQueueSize()
             );
         } else {
             this.harvesterExecutorQueue = new LinkedBlockingQueue<>();
@@ -111,12 +111,30 @@ public class Spooler {
         return true;
     }
 
+    public ReporterInfo query(String id) {
+        HarvesterReporter reporter = null;
+        try {
+            this.lock.readLock().lockInterruptibly();
+            reporter = this.reporterFactory.newReporter();
+            return this.reporter.query(id);
+        } catch (Exception e) {
+            return null;
+        } finally {
+            this.lock.readLock().unlock();
+            if (reporter != null) {
+                reporter.shutdown();
+            }
+        }
+
+    }
+
     @Nullable
     public String addHttpFile(String url) {
 
         String id = Harvester.getHttpFileUniqueStoreName(url);
-        String savePath = this.fGetConfig.getStorePath() + "/" + id;
-        if (this.fileStore.exist(savePath)) {
+        String savePath = this.fGetConfig.getStorePath();
+        String filePath = savePath + "/" + id;
+        if (this.fileStore.exist(filePath)) {
             return id;
         }
 
@@ -133,8 +151,16 @@ public class Spooler {
                 }
                 if (harvester == null) {
                     harvester = new HttpFile(url, savePath, this.fileStore);
+                    this.harvesterTable.put(id, harvester);
                     //先初始化进度汇报
-                    //this.reporter.reportProgress(id, 0, 0, false);
+                    this.reporter.report(new ReporterInfo(
+                            harvester.id(),//下载任务标识ID
+                            "loading...",//文件名，因为需要请求才能获取到文件名，所以先初始化为默认文本
+                            0,//文件总大小，需要请求才能获取，先初始化为0
+                            0,//文件已读大小，需要请求才能获取，先是初始化0
+                            false,//是否完成
+                            false//是否成功
+                    ));
                     this.harvesterExecutor.execute(harvester);
                 }
 
@@ -151,5 +177,11 @@ public class Spooler {
 
         return null;
 
+    }
+
+    public void shutdown() {
+        this.harvesterExecutor.shutdown();
+        this.scheduleExecutor.shutdown();
+        this.reporter.shutdown();
     }
 }

@@ -12,6 +12,8 @@ import org.zhiyang.fget.store.FileStore;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -125,7 +127,9 @@ public class HttpFile extends Harvester {
 
             //存储下载文件并标记本次下载任务已经完成
             this.targetSize = responseBody.contentLength();
-            fileStore.put(this.getSaveFilePath(), new ReadReporterInputStream(responseBody.byteStream()));
+            Map<String, String> metadata = new HashMap<>();
+            metadata.put("Content-Disposition", "attachment;filename=" + this.realFileName);
+            fileStore.put(this.getSaveFilePath(), new ReadReporterInputStream(responseBody.byteStream()), metadata);
 
             this.setSuccess();
 

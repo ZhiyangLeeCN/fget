@@ -9,4 +9,6 @@ public interface HarvesterReporter {
 
     public void report(ReporterInfo reporterInfo);
 
+    public void shutdown();
+
 }

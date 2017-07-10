@@ -1,9 +1,11 @@
 package org.zhiyang.fget.prospector.reporter;
 
+import org.zhiyang.fget.common.RemotingSerializable;
+
 /**
  * @author lizhiyang
  */
-public class ReporterInfo {
+public class ReporterInfo extends RemotingSerializable {
 
     private String id;
 
@@ -16,6 +18,10 @@ public class ReporterInfo {
     private boolean complete = false;
 
     private boolean success = false;
+
+    public ReporterInfo() {
+
+    }
 
     public ReporterInfo(String id, String realFileName, long totalSize, long readSize, boolean complete, boolean success) {
         this.id = id;

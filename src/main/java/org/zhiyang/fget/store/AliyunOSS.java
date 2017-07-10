@@ -1,9 +1,11 @@
 package org.zhiyang.fget.store;
 
 import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.model.ObjectMetadata;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Map;
 
 /**
  * @author lizhiyang
@@ -42,14 +44,27 @@ public class AliyunOSS implements FileStore {
         return this.storeClient.doesObjectExist(this.bucketName, path);
     }
 
-    @Override
-    public void put(String path, InputStream in) throws Exception {
-        this.storeClient.putObject(this.bucketName, path, in);
+    public ObjectMetadata getMetadata(Map<String, String> map) {
+        if (null == map) {
+            return null;
+        }
+
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        for (Map.Entry<String, String> entry: map.entrySet()) {
+            objectMetadata.setHeader(entry.getKey(), entry.getValue());
+        }
+
+        return objectMetadata;
     }
 
     @Override
-    public void put(String path, File file) throws Exception {
-        this.storeClient.putObject(this.bucketName, path, file);
+    public void put(String path, InputStream in, Map<String, String> metadata) throws Exception {
+        this.storeClient.putObject(this.bucketName, path, in, getMetadata(metadata));
+    }
+
+    @Override
+    public void put(String path, File file, Map<String, String> metadata) throws Exception {
+        this.storeClient.putObject(this.bucketName, path, file, getMetadata(metadata));
     }
 
     @Override

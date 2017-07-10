@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.Map;
 
 /**
  * @author lizhiyang
@@ -61,7 +62,7 @@ public class LocalFileStore implements FileStore {
     }
 
     @Override
-    public void put(String path, InputStream in) throws Exception {
+    public void put(String path, InputStream in, Map<String, String> metadata) throws Exception {
         File saveFile = ensureSaveFileOK(path);
         FileOutputStream fos = new FileOutputStream(saveFile);
 
@@ -75,9 +76,9 @@ public class LocalFileStore implements FileStore {
     }
 
     @Override
-    public void put(String path, File file) throws Exception {
+    public void put(String path, File file, Map<String, String> metadata) throws Exception {
         File saveFile = ensureSaveFileOK(path);
-        this.put(saveFile.getPath(), new FileInputStream(file));
+        this.put(saveFile.getPath(), new FileInputStream(file), metadata);
     }
 
     @Override
