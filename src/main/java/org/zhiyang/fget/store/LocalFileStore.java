@@ -1,7 +1,7 @@
 package org.zhiyang.fget.store;
 
-import com.sun.istack.internal.Nullable;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

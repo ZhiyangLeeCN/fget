@@ -1,10 +1,10 @@
 package org.zhiyang.fget.prospector;
 
-import com.sun.istack.internal.NotNull;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zhiyang.fget.store.FileStore;
